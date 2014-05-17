@@ -1,2 +1,2 @@
-click
-jinja2
+click==0.7
+Jinja2==2.7.2
