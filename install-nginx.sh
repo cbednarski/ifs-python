@@ -1,10 +1,3 @@
-# Nginx
-
-if brew -v && ! nginx -v ; then
-  brew install nginx
-  exit
-fi
-
 if ! nginx -v ; then
   apt-get install -y libpcre3-dev zlib1g-dev libssl-dev
   cd /tmp

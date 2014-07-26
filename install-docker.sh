@@ -1,5 +1,3 @@
-# From https://get.docker.io/ubuntu/
-
 if ! docker -v ; then
 
   if [ ! -e /usr/lib/apt/methods/https ]; then
