@@ -1,5 +1,7 @@
 import click
 
+import lib
+
 
 @click.group()
 def cli():
@@ -26,7 +28,8 @@ def search():
 
 @cli.command()
 def install():
-    click.echo('install!')
+
+    click.echo(lib.install('nginx'))
 
 
 if __name__ == '__main__':
