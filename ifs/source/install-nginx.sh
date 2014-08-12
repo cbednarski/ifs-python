@@ -1,5 +1,5 @@
 if ! nginx -v ; then
-  apt-get install -y libpcre3-dev zlib1g-dev libssl-dev
+  apt-get install -y build-essentials libpcre3-dev zlib1g-dev libssl-dev
   cd /tmp
   wget -q http://nginx.org/download/nginx-1.6.0.tar.gz
   tar -xzf nginx-1.6.0.tar.gz
