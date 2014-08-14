@@ -18,7 +18,8 @@ def cli():
 
 @cli.command()
 def ls():
-    click.echo('list of things')
+    for app in lib.list_apps():
+        click.echo(app)
 
 
 @cli.command()
@@ -28,8 +29,20 @@ def search():
 
 @cli.command()
 def install():
-
     click.echo(lib.install('nginx'))
+
+
+@cli.command()
+@click.argument('application')
+def info(application):
+    """
+    Show information about an application from ifs ls
+    """
+    info = lib.app_info(application)
+    for k, v in info.iteritems():
+        if type(v) is list:
+            v = ' '.join(v)
+        click.echo('%s: %s' % (k, v))
 
 
 if __name__ == '__main__':

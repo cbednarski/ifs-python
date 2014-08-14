@@ -17,7 +17,7 @@ def bash(command):
     except subprocess.CalledProcessError as e:
         return False
 
-def find_apps():
+def list_apps():
     path = os.path.dirname(os.path.realpath(__file__))
     files = glob.glob(path + '/source/*.py')
     results = []
@@ -27,8 +27,31 @@ def find_apps():
             results.append(i)
     return results
 
+def get_download_url(application, version=None):
+    app = load_app(application)
+    if not version:
+        version = app.version
+    return app.download_url.replace('VERSION', version)
+
+def check_version(application):
+    # Call app.version_cmd to check which version is currently installed
+    return None
+
+def load_app(application):
+    return importlib.import_module('ifs.source.nginx', '..source')
+
+def app_info(application):
+    app = load_app(application)
+    info = {
+        "default_version": app.version,
+        "current_version": check_version(application) or 'Not Installed',
+        "dependencies": app.depends,
+        "download_url": app.download_url,
+    }
+    return info
+
 def install(application, version=None, force=False):
-    app = importlib.import_module('ifs.source.nginx', '..source')
+    app = load_app(application)
     if not version:
         version = app.version
     installed_version = bash(app.version_cmd)
@@ -36,6 +59,3 @@ def install(application, version=None, force=False):
         pass
     else:
         pass
-
-if __name__ == '__main__':
-    print find_apps()
