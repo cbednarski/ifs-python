@@ -27,6 +27,9 @@ def list_apps():
             results.append(i)
     return results
 
+def load_app(application):
+    return importlib.import_module('ifs.source.nginx', '..source')
+
 def get_download_url(application, version=None):
     app = load_app(application)
     if not version:
@@ -36,9 +39,6 @@ def get_download_url(application, version=None):
 def check_version(application):
     # Call app.version_cmd to check which version is currently installed
     return None
-
-def load_app(application):
-    return importlib.import_module('ifs.source.nginx', '..source')
 
 def app_info(application):
     app = load_app(application)
