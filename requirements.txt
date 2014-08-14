@@ -1,5 +1,2 @@
 click==2.6
--e git+git@github.com:cbednarski/ifs.git@0ed11e69fab4aedce262bc3bed71d6037e43b435#egg=ifs-master
-py==1.4.23
 pytest==2.6.1
-wsgiref==0.1.2
