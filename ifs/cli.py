@@ -23,8 +23,11 @@ def ls():
 
 
 @cli.command()
-def search():
-    click.echo('searching...')
+@click.argument('term')
+def search(term):
+    for app in lib.list_apps():
+        if term in app:
+            click.echo(app)
 
 
 @cli.command()
