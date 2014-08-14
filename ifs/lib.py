@@ -28,7 +28,11 @@ def list_apps():
     return results
 
 def load_app(application):
-    return importlib.import_module('ifs.source.nginx', '..source')
+    try:
+        mod = importlib.import_module('ifs.source.%s' % application, '..source')
+    except ImportError as e:
+        mod = None
+    return mod
 
 def get_download_url(application, version=None):
     app = load_app(application)
