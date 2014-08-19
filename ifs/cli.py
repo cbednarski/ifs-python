@@ -31,8 +31,9 @@ def search(term):
 
 
 @cli.command()
-def install():
-    click.echo(lib.install('nginx'))
+@click.argument('application')
+def install(application):
+    click.echo(lib.install(application))
 
 
 @cli.command()
