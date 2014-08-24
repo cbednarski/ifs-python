@@ -32,15 +32,28 @@ def test_check_version():
     app.version_cmd = 'venv/bin/py.test --version'
     assert lib.check_version(app) == '2.6.1'
 
-def test_install_deps():
+    app.version_re = 'pytest version (\d+\.\d+\.\d+)'
+    assert lib.check_version(app) == '2.6.1'
+
+    app.version_cmd = 'echo "pie"'
+    assert lib.check_version(app) == None
+
+def test_cmd_install_deps():
     app = Object()
     app.version_cmd = 'ls'
-
-    app.depends = ['blah']
-    assert lib.install_deps(app) == 'apt-get install -y blah'
+    assert lib.cmd_install_deps(app) == None
 
     app.depends = []
-    assert lib.install_deps(app) == False
+    assert lib.cmd_install_deps(app) == None
+
+    app.depends = ['blah']
+    assert lib.cmd_install_deps(app) == 'apt-get install -y blah'
 
     app.depends = ['blah', 'blee']
-    assert lib.install_deps(app) == 'apt-get install -y blah blee'
+    assert lib.cmd_install_deps(app) == 'apt-get install -y blah blee'
+
+def test_cmd_install_app():
+    app = Object()
+    app.version = '1.2.3'
+    app.install_script = 'application-VERSION-blah-VERSION'
+    assert lib.cmd_install_app(app) == 'application-1.2.3-blah-1.2.3'
