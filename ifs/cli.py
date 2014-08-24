@@ -1,8 +1,25 @@
 import sys
 
 import click
+from colorama import Style, Fore
 
-from lib import *
+import lib
+
+
+def get_app(app_name):
+    app = lib.load_app(app_name)
+    if app is None:
+        click.echo('ifs does not have a source for "%s"' % app_name)
+        exit(1)
+    else:
+        return app
+
+def error(message=None, nl=True):
+    click.echo(Style.BRIGHT + Fore.RED + message + Style.RESET_ALL, sys.stderr, nl)
+
+def ok(message=None, file=None, nl=True):
+    click.echo(Style.BRIGHT + Fore.GREEN + message + Style.RESET_ALL, file, nl)
+
 
 @click.group()
 def cli():
@@ -19,14 +36,14 @@ def cli():
 
 @cli.command()
 def ls():
-    for app in list_apps():
+    for app in lib.list_apps():
         click.echo(app)
 
 
 @cli.command()
 @click.argument('term')
 def search(term):
-    for app in list_apps():
+    for app in lib.list_apps():
         if term in app:
             click.echo(app)
 
@@ -35,7 +52,7 @@ def search(term):
 @click.argument('app_name')
 def install(app_name):
     app = get_app(app_name)
-    cmd = install(app_name)
+    cmd = lib.install(app)
     if cmd.returncode == 0:
         ok(cmd.output)
     else:
@@ -51,7 +68,7 @@ def version(app_name):
         error('ifs does not have a source for "%s"' % app_name)
         exit(1)
 
-    version = check_version(app)
+    version = lib.check_version(app)
     if version is None:
         error('%s is not installed' % app_name)
         exit(1)
@@ -63,10 +80,11 @@ def version(app_name):
 @click.argument('app_name')
 def info(app_name):
     """
-    Show information about an app_name from ifs ls
+    Show information about an application source
+    Run `ifs ls` for a list of applications
     """
     app = get_app(app_name)
-    info = app_info(app_name)
+    info = lib.app_info(app)
     for k, v in info.iteritems():
         if type(v) is list:
             v = ' '.join(v)
