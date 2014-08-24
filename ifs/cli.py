@@ -33,7 +33,9 @@ def search(term):
 @cli.command()
 @click.argument('application')
 def install(application):
-    click.echo(lib.install(application))
+    cmd = lib.install(application)
+    click.echo(cmd.output)
+    exit(cmd.returncode)
 
 
 @cli.command()
