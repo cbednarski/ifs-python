@@ -2,6 +2,14 @@ import click
 
 import lib
 
+def get_app(app_name):
+    app = lib.load_app(app_name)
+    if app is None:
+        click.echo('ifs does not have a source for "%s"' % app_name)
+        exit(1)
+    else:
+        return app
+
 
 @click.group()
 def cli():
@@ -31,20 +39,36 @@ def search(term):
 
 
 @cli.command()
-@click.argument('application')
-def install(application):
-    cmd = lib.install(application)
+@click.argument('app_name')
+def install(app_name):
+    app = get_app(app_name)
+    cmd = lib.install(app_name)
     click.echo(cmd.output)
     exit(cmd.returncode)
 
 
 @cli.command()
-@click.argument('application')
-def info(application):
+@click.argument('app_name')
+def version(app_name):
+    app = get_app(app_name)
+    if not app:
+        click.echo('ifs does not have a source for "%s"' % app_name)
+        exit(1)
+
+    version = lib.check_version(app)
+    click.echo(version)
+    if version is None:
+        exit(1)
+
+
+@cli.command()
+@click.argument('app_name')
+def info(app_name):
     """
-    Show information about an application from ifs ls
+    Show information about an app_name from ifs ls
     """
-    info = lib.app_info(application)
+    app = get_app(app_name)
+    info = lib.app_info(app_name)
     for k, v in info.iteritems():
         if type(v) is list:
             v = ' '.join(v)
