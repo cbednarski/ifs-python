@@ -8,10 +8,19 @@ These scripts target Ubuntu 14.04.
 
 Install nginx
 
-    install-base.sh   # apt-get update, install some deps
-    install-nginx.sh  # Compile nginx from source
-    cp nginx.conf /etc/nginx/nginx.conf
-    cp upstart-nginx.conf /etc/init/nginx.conf
-    start nginx
+    pip install --upgrade ifs
+    ifs install nginx
+    service nginx start
 
-The API for this could be cleaner, but it works for now.
+## Install from source
+
+(It's so meta)
+
+    git clone https://github.com/cbednarski/ifs.git
+    pip install -e ifs
+
+## Install for development
+
+    pip install --upgrade virtualenv
+    git clone https://github.com/cbednarski/ifs.git
+    make test

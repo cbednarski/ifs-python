@@ -2,11 +2,11 @@ pip=venv/bin/pip
 pytest=venv/bin/py.test
 
 init:
-	virtualenv venv
-	$(pip) install -r requirements.txt
+	@if [ ! -d venv ]; then virtualenv venv; fi
+	$(pip) install -q -r requirements.txt
 
-test:
-	$(pytest) tests
+test: init
+	$(pytest) -q tests
 
 freeze:
 	$(pip) freeze > requirements.txt
