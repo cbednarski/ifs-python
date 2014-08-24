@@ -2,3 +2,4 @@
 venv
 *.pyc
 ifs.egg-info/
+dist/
