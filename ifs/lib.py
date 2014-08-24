@@ -7,22 +7,7 @@ import sys
 import urllib
 
 import click
-from colorama import Style, Fore
 
-
-def get_app(app_name):
-    app = load_app(app_name)
-    if app is None:
-        click.echo('ifs does not have a source for "%s"' % app_name)
-        exit(1)
-    else:
-        return app
-
-def error(message=None, nl=True):
-    click.echo(Style.BRIGHT + Fore.RED + message + Style.RESET_ALL, sys.stderr, nl)
-
-def ok(message=None, file=None, nl=True):
-    click.echo(Style.BRIGHT + Fore.GREEN + message + Style.RESET_ALL, file, nl)
 
 class Cmd(object):
     returncode = None
@@ -72,8 +57,7 @@ def load_app(app_name):
         mod = None
     return mod
 
-def get_download_url(app_name, version=None):
-    app = load_app(app_name)
+def get_download_url(app, version=None):
     if not version:
         version = app.version
     return app.download_url.replace('VERSION', version)
@@ -94,8 +78,7 @@ def check_version(app):
     else:
         return matches.group(1)
 
-def app_info(app_name):
-    app = load_app(app_name)
+def app_info(app):
     info = {
         "default_version": app.version,
         "current_version": check_version(app) or 'Not Installed',
@@ -116,8 +99,7 @@ def cmd_install_app(app, version=None):
         version = app.version
     return cmd.replace('VERSION', version)
 
-def install(app_name, version=None, force=False):
-    app = load_app(app_name)
+def install(app, version=None, force=False):
     if not version:
         version = app.version
     if check_version(app) == version:

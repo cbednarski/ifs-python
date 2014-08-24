@@ -16,14 +16,14 @@ def test_load_app():
     assert app is None
 
 def test_get_download_url():
-    url = lib.get_download_url('nginx')
+    url = lib.get_download_url(lib.load_app('nginx'))
     assert url == 'http://nginx.org/download/nginx-1.6.1.tar.gz'
 
-    url = lib.get_download_url('nginx', '1.6.3')
+    url = lib.get_download_url(lib.load_app('nginx'), '1.6.3')
     assert url == 'http://nginx.org/download/nginx-1.6.3.tar.gz'
 
 def test_app_info():
-    info = lib.app_info('nginx')
+    info = lib.app_info(lib.load_app('nginx'))
     assert 'default_version' in info
     assert info['download_url'] == 'http://nginx.org/download/nginx-VERSION.tar.gz'
 
