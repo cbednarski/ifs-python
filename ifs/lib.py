@@ -1,5 +1,6 @@
 import glob
 import os
+import re
 import subprocess
 import urllib
 import importlib
@@ -47,15 +48,15 @@ def list_apps():
             results.append(i)
     return results
 
-def load_app(application):
+def load_app(app_name):
     try:
-        mod = importlib.import_module('ifs.source.%s' % application, '..source')
+        mod = importlib.import_module('ifs.source.%s' % app_name, '..source')
     except ImportError as e:
         mod = None
     return mod
 
-def get_download_url(application, version=None):
-    app = load_app(application)
+def get_download_url(app_name, version=None):
+    app = load_app(app_name)
     if not version:
         version = app.version
     return app.download_url.replace('VERSION', version)
@@ -63,13 +64,21 @@ def get_download_url(application, version=None):
 def match_semver(string):
     return
 
-def check_version(application):
+def check_version(app):
     # Call app.version_cmd to check which version is currently installed
-    cmd = Cmd.run(application.version_cmd)
-    return cmd.output
+    cmd = Cmd.run(app.version_cmd)
+    if hasattr(app, 'version_re'):
+        r = re.compile(app.version_re)
+    else:
+        r = re.compile('(\d+\.\d+\.\d+)')
+    matches = r.search(cmd.output)
+    if matches is None:
+        return None
+    else:
+        return matches.group(1)
 
-def app_info(application):
-    app = load_app(application)
+def app_info(app_name):
+    app = load_app(app_name)
     info = {
         "default_version": app.version,
         "current_version": check_version(app) or 'Not Installed',
@@ -78,29 +87,29 @@ def app_info(application):
     }
     return info
 
-def install_deps(application):
-    if application.depends:
-        return 'apt-get install -y %s' % ' '.join(application.depends)
+def cmd_install_deps(app):
+    if hasattr(app, 'depends') and app.depends:
+        return 'apt-get install -y %s' % ' '.join(app.depends)
     else:
-        return False
+        return None
 
-def install_app(application, version=None):
-    cmd = application.install_script
+def cmd_install_app(app, version=None):
+    cmd = app.install_script
     if not version:
-        version = application.version
+        version = app.version
     return cmd.replace('VERSION', version)
 
-def install(application, version=None, force=False):
-    app = load_app(application)
+def install(app_name, version=None, force=False):
+    app = load_app(app_name)
     if not version:
         version = app.version
     if check_version(app) == version:
         return '%s %s is already installed' % (app.name, version)
     else:
         # Install dependencies
-        deps = Cmd.run(install_deps(app))
+        deps = Cmd.run(cmd_install_deps(app))
         if deps.returncode > 0:
             return deps
 
-        install = Cmd.run(install_app(app, version))
+        install = Cmd.run(cmd_install_app(app, version))
         return install
