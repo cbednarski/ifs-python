@@ -1,15 +1,8 @@
+import sys
+
 import click
 
-import lib
-
-def get_app(app_name):
-    app = lib.load_app(app_name)
-    if app is None:
-        click.echo('ifs does not have a source for "%s"' % app_name)
-        exit(1)
-    else:
-        return app
-
+from lib import *
 
 @click.group()
 def cli():
@@ -26,14 +19,14 @@ def cli():
 
 @cli.command()
 def ls():
-    for app in lib.list_apps():
+    for app in list_apps():
         click.echo(app)
 
 
 @cli.command()
 @click.argument('term')
 def search(term):
-    for app in lib.list_apps():
+    for app in list_apps():
         if term in app:
             click.echo(app)
 
@@ -42,8 +35,11 @@ def search(term):
 @click.argument('app_name')
 def install(app_name):
     app = get_app(app_name)
-    cmd = lib.install(app_name)
-    click.echo(cmd.output)
+    cmd = install(app_name)
+    if cmd.returncode == 0:
+        ok(cmd.output)
+    else:
+        error(cmd.output)
     exit(cmd.returncode)
 
 
@@ -52,13 +48,15 @@ def install(app_name):
 def version(app_name):
     app = get_app(app_name)
     if not app:
-        click.echo('ifs does not have a source for "%s"' % app_name)
+        error('ifs does not have a source for "%s"' % app_name)
         exit(1)
 
-    version = lib.check_version(app)
-    click.echo(version)
+    version = check_version(app)
     if version is None:
+        error('%s is not installed' % app_name)
         exit(1)
+
+    click.echo(version)
 
 
 @cli.command()
@@ -68,7 +66,7 @@ def info(app_name):
     Show information about an app_name from ifs ls
     """
     app = get_app(app_name)
-    info = lib.app_info(app_name)
+    info = app_info(app_name)
     for k, v in info.iteritems():
         if type(v) is list:
             v = ' '.join(v)

@@ -1,11 +1,28 @@
 import glob
+import importlib
 import os
 import re
 import subprocess
+import sys
 import urllib
-import importlib
 
-from source import nginx
+import click
+from colorama import Style, Fore
+
+
+def get_app(app_name):
+    app = load_app(app_name)
+    if app is None:
+        click.echo('ifs does not have a source for "%s"' % app_name)
+        exit(1)
+    else:
+        return app
+
+def error(message=None, nl=True):
+    click.echo(Style.BRIGHT + Fore.RED + message + Style.RESET_ALL, sys.stderr, nl)
+
+def ok(message=None, file=None, nl=True):
+    click.echo(Style.BRIGHT + Fore.GREEN + message + Style.RESET_ALL, file, nl)
 
 class Cmd(object):
     returncode = None
