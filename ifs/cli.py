@@ -50,8 +50,28 @@ def search(term):
 
 @cli.command()
 @click.argument('app_name')
-def install(app_name):
+@click.option('--version')
+@click.option('--force', '-f', default=False, is_flag=True)
+def install(app_name, version, force):
+    """
+    Install the specified application
+
+    --version 1.0.0: override the default version as indicated in ifs info
+    -f --force: purge cached downloads and source files and reinstall
+
+    Note that overriding the version is not guaranteed to work, as the build
+    script itself may change between versions. However, this should allow you
+    to do minor upgrades and some naive version pinning idependently of ifs
+    source versions.
+    """
     app = get_app(app_name)
+
+    if not version:
+        version = app.version
+    if lib.check_version(app) == version and not force:
+        click.echo('%s %s is already installed' % (app.__name__[11:], version))
+        exit(0)
+
     cmd = lib.install(app)
     if cmd.returncode == 0:
         ok(cmd.output)

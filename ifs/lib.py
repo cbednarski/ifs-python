@@ -35,10 +35,29 @@ class Cmd(object):
         return cmdo
 
 
-def download(url, filename):
+def get_download_url(app, version=None):
+    if not version:
+        version = app.version
+    if hasattr(app, 'download_url') and app.download_url:
+        return app.download_url.replace('VERSION', version)
+    else:
+        return None
+
+def get_download_fileame(url, target):
+    if os.path.isdir(target):
+        target += '/' + url.split('/')[-1]
+
+def download(url, target):
+    """
+    Target should be an absolute path to the location you want to download the
+    file.
+    """
     # Add progress bar via:
     # http://stackoverflow.com/a/22776/317916
-    urllib.urlretrieve(url, filename)
+    if not url:
+        return None
+    urllib.urlretrieve(url, target)
+    return target
 
 def list_apps():
     path = os.path.dirname(os.path.realpath(__file__))
@@ -56,11 +75,6 @@ def load_app(app_name):
     except ImportError as e:
         mod = None
     return mod
-
-def get_download_url(app, version=None):
-    if not version:
-        version = app.version
-    return app.download_url.replace('VERSION', version)
 
 def match_semver(string):
     return
@@ -102,13 +116,29 @@ def cmd_install_app(app, version=None):
 def install(app, version=None, force=False):
     if not version:
         version = app.version
-    if check_version(app) == version:
-        return '%s %s is already installed' % (app.name, version)
-    else:
-        # Install dependencies
-        deps = Cmd.run(cmd_install_deps(app))
+
+    # Create temp directory
+    target='/tmp/ifs-%s-%s' % (app.__name__[11:], app.version)
+    if not os.path.exists(target):
+        os.mkdir(target)
+    os.chdir(target)
+
+    # Download source
+    dl_url = get_download_url(app, version)
+    dl_file = get_download_fileame(dl_url, target)
+    if dl_file and not os.path.exists(dl_file):
+        click.echo('Downloading %s' % dl_url)
+        if download(dl_url, dl_file):
+            click.echo('Downloaded %s' % dl_url)
+
+    # Install dependencies
+    depc = cmd_install_deps(app)
+    if depc:
+        click.echo('Installing dependencies: %s' % depc)
+        deps = Cmd.run(depc)
         if deps.returncode > 0:
             return deps
 
-        install = Cmd.run(cmd_install_app(app, version))
-        return install
+    click.echo('Installing from source')
+    install = Cmd.run(cmd_install_app(app, version))
+    return install
