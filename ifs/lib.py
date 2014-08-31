@@ -43,9 +43,10 @@ def get_download_url(app, version=None):
     else:
         return None
 
-def get_download_fileame(url, target):
-    if os.path.isdir(target):
+def get_download_filename(url, target):
+    if url and os.path.isdir(target):
         target += '/' + url.split('/')[-1]
+    return None
 
 def download(url, target):
     """
@@ -125,7 +126,7 @@ def install(app, version=None, force=False):
 
     # Download source
     dl_url = get_download_url(app, version)
-    dl_file = get_download_fileame(dl_url, target)
+    dl_file = get_download_filename(dl_url, target)
     if dl_file and not os.path.exists(dl_file):
         click.echo('Downloading %s' % dl_url)
         if download(dl_url, dl_file):
