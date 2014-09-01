@@ -19,20 +19,15 @@ class Cmd(object):
         self.cmd = cmd
 
     def execute(self):
-        try:
-            p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1, shell=True)
-            output = ''
-            for line in iter(p.stdout.readline, b''):
-                output += line
-                print line,
-            p.communicate()
-            self.output = output
-            self.returncode = p.returncode
-            return True
-        except subprocess.CalledProcessError as e:
-            self.output = e.output
-            self.returncode = e.returncode
-            return False
+        p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1, shell=True)
+        output = ''
+        for line in iter(p.stdout.readline, b''):
+            output += line
+            print line,
+        p.communicate()
+        self.output = output
+        self.returncode = p.returncode
+        return self.returncode == 0
 
     @classmethod
     def run(cls, cmd):
