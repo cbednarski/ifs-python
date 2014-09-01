@@ -150,13 +150,13 @@ class App(object):
             version = self.version
 
         # Create temp directory
-        target='/tmp/ifs-%s-%s' % (self.__name__[11:], self.version)
+        target='/tmp/ifs-%s-%s' % (self.name, self.version)
         if not os.path.exists(target):
             os.mkdir(target)
         os.chdir(target)
 
         # Download source
-        dl_url = get_download_url(self, version)
+        dl_url = self.get_download_url(version)
         dl_file = get_download_filename(dl_url, target)
         if dl_file:
             if os.path.exists(dl_file):
@@ -167,7 +167,7 @@ class App(object):
                     click.echo('Download complete')
 
         # Install dependencies
-        depc = cmd_install_deps(self)
+        depc = self.cmd_install_deps()
         if depc:
             click.echo('Installing dependencies: %s' % depc)
             deps = Cmd.run(depc)
@@ -175,5 +175,5 @@ class App(object):
                 return deps
 
         click.echo('Installing from source')
-        install = Cmd.run(cmd_install_app(self, version))
+        install = Cmd.run(self.cmd_install_app(version))
         return install

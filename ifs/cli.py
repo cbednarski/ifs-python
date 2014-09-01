@@ -7,7 +7,7 @@ import lib
 
 
 def get_app(app_name):
-    app = lib.load_app(app_name)
+    app = lib.App.load(app_name)
     if app is None:
         click.echo('ifs does not have a source for "%s"' % app_name)
         exit(1)
@@ -68,11 +68,11 @@ def install(app_name, version, force):
 
     if not version:
         version = app.version
-    if lib.check_version(app) == version and not force:
-        click.echo('%s %s is already installed' % (app.__name__[11:], version))
+    if app.check_version() == version and not force:
+        click.echo('%s %s is already installed' % (app.name, version))
         exit(0)
 
-    cmd = lib.install(app)
+    cmd = app.install()
     if cmd.returncode == 0:
         ok(cmd.output)
     else:
@@ -84,11 +84,8 @@ def install(app_name, version, force):
 @click.argument('app_name')
 def version(app_name):
     app = get_app(app_name)
-    if not app:
-        error('ifs does not have a source for "%s"' % app_name)
-        exit(1)
 
-    version = lib.check_version(app)
+    version = app.check_version()
     if version is None:
         error('%s is not installed' % app_name)
         exit(1)
@@ -104,7 +101,7 @@ def info(app_name):
     Run `ifs ls` for a list of applications
     """
     app = get_app(app_name)
-    info = lib.app_info(app)
+    info = app.info()
     for k, v in info.iteritems():
         if type(v) is list:
             v = ' '.join(v)
