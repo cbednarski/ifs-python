@@ -20,8 +20,14 @@ class Cmd(object):
 
     def execute(self):
         try:
-            self.output = subprocess.check_output(self.cmd, stderr=subprocess.STDOUT, shell=True)
-            self.returncode = 0
+            p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1, shell=True)
+            output = ''
+            for line in iter(p.stdout.readline, b''):
+                output += line
+                print line,
+            p.communicate()
+            self.output = output
+            self.returncode = p.returncode
             return True
         except subprocess.CalledProcessError as e:
             self.output = e.output
@@ -46,6 +52,7 @@ def get_download_url(app, version=None):
 def get_download_filename(url, target):
     if url and os.path.isdir(target):
         target += '/' + url.split('/')[-1]
+        return target
     return None
 
 def download(url, target):
@@ -127,10 +134,13 @@ def install(app, version=None, force=False):
     # Download source
     dl_url = get_download_url(app, version)
     dl_file = get_download_filename(dl_url, target)
-    if dl_file and not os.path.exists(dl_file):
-        click.echo('Downloading %s' % dl_url)
-        if download(dl_url, dl_file):
-            click.echo('Downloaded %s' % dl_url)
+    if dl_file:
+        if os.path.exists(dl_file):
+            click.echo('Already downloaded %s' % dl_file)
+        else:
+            click.echo('Downloading %s to %s' % (dl_url, dl_file))
+            if download(dl_url, dl_file):
+                click.echo('Download complete')
 
     # Install dependencies
     depc = cmd_install_deps(app)
