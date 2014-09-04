@@ -1,4 +1,5 @@
 import sys
+from textwrap import TextWrapper, dedent
 
 import click
 from colorama import Style, Fore
@@ -36,16 +37,26 @@ def cli():
 
 @cli.command()
 def ls():
-    for app in lib.list_apps():
+    """
+    List available sources.
+    """
+    for app in lib.list_app_names():
         click.echo(app)
 
 
 @cli.command()
 @click.argument('term')
-def search(term):
-    for app in lib.list_apps():
-        if term in app:
-            click.echo(app)
+def grep(term):
+    """
+    Search in source name and description.
+    """
+    apps = lib.search_app_strings(term)
+    text = TextWrapper(initial_indent='  ', subsequent_indent='  ')
+    for app in apps:
+        click.echo(app.name)
+        if app.description:
+            des = dedent(app.description)
+            click.echo(text.fill(app.description))
 
 
 @cli.command()
@@ -54,7 +65,7 @@ def search(term):
 @click.option('--force', '-f', default=False, is_flag=True)
 def install(app_name, version, force):
     """
-    Install the specified application
+    Install the specified application.
 
     --version 1.0.0: override the default version as indicated in ifs info
     -f --force: purge cached downloads and source files and reinstall
@@ -83,6 +94,13 @@ def install(app_name, version, force):
 @cli.command()
 @click.argument('app_name')
 def version(app_name):
+    """
+    Show the installed source version.
+
+    Abstracts away application-specific flags like -v -V --version -version etc.
+
+    Example: ifs version nginx
+    """
     app = get_app(app_name)
 
     version = app.check_version()
@@ -97,7 +115,7 @@ def version(app_name):
 @click.argument('app_name')
 def info(app_name):
     """
-    Show information about an application source
+    Show source name, version, and deps.
     Run `ifs ls` for a list of applications
     """
     app = get_app(app_name)

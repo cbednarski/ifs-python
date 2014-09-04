@@ -35,7 +35,7 @@ def download(url, target):
     urllib.urlretrieve(url, target)
     return target
 
-def list_apps():
+def list_app_names():
     path = os.path.dirname(os.path.realpath(__file__))
     files = glob.glob(path + '/source/*.py')
     results = []
@@ -44,6 +44,22 @@ def list_apps():
         if i not in ['__init__']:
             results.append(i)
     return results
+
+def list_apps():
+    apps = []
+    for app_name in list_app_names():
+        apps.append(App.load(app_name))
+    return apps
+
+def search_app_strings(term):
+    results = set()
+    for app in list_apps():
+        if app.name and term in app.name:
+            results.add(app)
+        if app.description and term in app.description:
+            results.add(app)
+    return results
+
 
 def match_semver(string):
     return
