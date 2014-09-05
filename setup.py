@@ -3,6 +3,9 @@ from setuptools import setup, find_packages
 setup(
     name='ifs',
     version='0.2.0',
+    author='Chris Bednarksi',
+    author_email='banzaimonkey@gmail.com',
+    url='https://github.com/cbednarski/ifs',
     description='Install from source',
     packages=find_packages(),
     include_package_data=True,
