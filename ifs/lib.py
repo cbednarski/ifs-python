@@ -1,4 +1,5 @@
 import glob
+import imp
 import importlib
 import os
 import re
@@ -60,6 +61,13 @@ def search_app_strings(term):
             results.add(app)
     return results
 
+def export_source(source):
+    path = os.path.dirname(os.path.realpath(__file__))
+    source_file = path + '/source/%s.py' % source
+    if os.path.exists(source_file):
+        return open(source_file).read()
+    else:
+        return None
 
 def match_semver(string):
     return
@@ -117,6 +125,17 @@ class App(object):
         except ImportError as e:
             app = None
         return app
+
+    @classmethod
+    def load_external(cls, path):
+        d, f = os.path.split(path)
+        name, ext = os.path.splitext(f)
+        try:
+            module = imp.load_source(name, path)
+            app = cls(name, module)
+            return app
+        except Exception as e:
+            return None
 
     def get_download_url(self, version=None):
         if not version:
