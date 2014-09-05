@@ -39,6 +39,8 @@ def cli():
 def ls():
     """
     List available sources.
+
+      ifs ls
     """
     for app in lib.list_app_names():
         click.echo(app)
@@ -49,6 +51,8 @@ def ls():
 def grep(term):
     """
     Search in source name and description.
+
+      ifs search nginx
     """
     apps = lib.search_app_strings(term)
     text = TextWrapper(initial_indent='  ', subsequent_indent='  ')
@@ -61,14 +65,13 @@ def grep(term):
 
 @cli.command()
 @click.argument('app_name')
-@click.option('--version')
-@click.option('--force', '-f', default=False, is_flag=True)
+@click.option('--version', help='Override the default version')
+@click.option('--force', '-f', default=False, is_flag=True, help='Force redownload and reinstall')
 def install(app_name, version, force):
     """
     Install the specified application.
 
-    --version 1.0.0: override the default version as indicated in ifs info
-    -f --force: purge cached downloads and source files and reinstall
+      ifs install -f --version 1.6.2 nginx
 
     Note that overriding the version is not guaranteed to work, as the build
     script itself may change between versions. However, this should allow you
@@ -92,14 +95,63 @@ def install(app_name, version, force):
 
 
 @cli.command()
+@click.argument('source', type=click.Path(exists=True))
+def source(source):
+    """
+    Install from a custom source.
+
+      ifs source /path/to/source.py
+
+    ifs ships with some built-in source files. This command allows you to load
+    your own, arbitrarily-defined source file at runtime. Think of it as the
+    bash source built-in for ifs.
+
+    Note: The source file should be a python file with the same basic structure
+    as one of the built-in source files. Run ifs export template to create a
+    new one.
+    """
+    app = lib.App.load_external(source)
+    if app:
+        cmd = app.install()
+        if cmd.returncode == 0:
+            ok(cmd.output)
+        else:
+            error(cmd.output)
+        exit(cmd.returncode)
+    else:
+        error('Unable to load source from %s' % source)
+        exit(1)
+
+
+@cli.command()
+@click.argument('source')
+def export(source):
+    """
+    Export a built-in source.
+
+      ifs export template > newapp.py
+
+    This is useful to see details on how a built-in source is installed, or to
+    facilitate creating a new source from a template. You can install exported
+    sources with `ifs source`
+    """
+    source_code = lib.export_source(source)
+    if source_code:
+        click.echo(source_code)
+    else:
+        error('No built-in source for %s' % source)
+        exit(1)
+
+
+@cli.command()
 @click.argument('app_name')
 def version(app_name):
     """
     Show the installed source version.
 
-    Abstracts away application-specific flags like -v -V --version -version etc.
+      ifs version nginx
 
-    Example: ifs version nginx
+    Abstracts away application-specific flags like -v -V --version -version etc.
     """
     app = get_app(app_name)
 
@@ -116,6 +168,9 @@ def version(app_name):
 def info(app_name):
     """
     Show source name, version, and deps.
+
+      ifs info nginx
+
     Run `ifs ls` for a list of applications
     """
     app = get_app(app_name)
