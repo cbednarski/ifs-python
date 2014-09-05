@@ -118,9 +118,9 @@ def source(source):
     if app:
         cmd = app.install()
         if cmd.returncode == 0:
-            ok(cmd.output)
+            ok('Installation succeeded')
         else:
-            error(cmd.output)
+            error('Installation failed')
         exit(cmd.returncode)
     else:
         error('Unable to load source from %s' % source)

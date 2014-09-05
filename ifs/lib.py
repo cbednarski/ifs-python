@@ -82,21 +82,22 @@ class Cmd(object):
         cmd = "set -e\n%s" % cmd
         self.cmd = cmd
 
-    def execute(self):
+    def execute(self, autoprint=False):
         p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1, shell=True)
         output = ''
         for line in iter(p.stdout.readline, b''):
             output += line
-            print line,
+            if autoprint:
+                print line,
         p.communicate()
         self.output = output
         self.returncode = p.returncode
         return self.returncode == 0
 
     @classmethod
-    def run(cls, cmd):
+    def run(cls, cmd, autoprint=False):
         cmdo = cls(cmd)
-        cmdo.execute()
+        cmdo.execute(autoprint)
         return cmdo
 
 
@@ -212,5 +213,5 @@ class App(object):
                 return deps
 
         click.echo('Installing from source')
-        install = Cmd.run(self.cmd_install_app(version))
+        install = Cmd.run(self.cmd_install_app(version), True)
         return install
