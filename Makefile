@@ -10,3 +10,6 @@ test: init
 
 freeze:
 	$(pip) freeze > requirements.txt
+
+publish:
+	python setup.py register
