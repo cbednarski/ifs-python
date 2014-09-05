@@ -178,7 +178,9 @@ class App(object):
         cmd = self.install_script
         if not version:
             version = self.version
-        return cmd.replace('VERSION', version)
+        if version:
+            cmd = cmd.replace('VERSION', version)
+        return cmd
 
     def install(self, version=None, force=False):
         if not version:

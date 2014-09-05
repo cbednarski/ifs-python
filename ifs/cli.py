@@ -79,11 +79,15 @@ def install(app_name, version, force):
     source versions.
     """
     app = get_app(app_name)
+    installed_version = app.check_version()
 
     if not version:
         version = app.version
-    if app.check_version() == version and not force:
-        click.echo('%s %s is already installed' % (app.name, version))
+    if installed_version == version and not force:
+        click.echo('%s %s is already installed' % (app.name, installed_version))
+        exit(0)
+    if installed_version and not version and not force:
+        click.echo('%s %s is already installed' % (app.name, installed_version))
         exit(0)
 
     cmd = app.install()
