@@ -3,6 +3,8 @@ from textwrap import TextWrapper, dedent
 
 import click
 from colorama import Style, Fore
+B = Style.BRIGHT
+N = Style.NORMAL
 
 import lib
 
@@ -30,7 +32,14 @@ def cli():
     When the version in the package manager has gone stale, get a fresh,
     production-ready version from a source tarball or precompiled archive.
 
-    Send issues or improvements to https://github.com/cbednarski/ifs
+    Each installation script is called a `source`, identified by a name like
+    `nginx`. ifs commands generally operate on these sources e.g. `ifs install
+    nginx` or `ifs export nginx`.
+
+    For a list of commands type `ifs ls`. For additional help on any command
+    type `ifs COMMAND --help`, e.g. `ifs install --help`.
+
+    Please send issues or improvements to https://github.com/cbednarski/ifs
     """
     pass
 
@@ -73,10 +82,44 @@ def install(app_name, version, force):
 
       ifs install -f --version 1.6.2 nginx
 
-    Note that overriding the version is not guaranteed to work, as the build
-    script itself may change between versions. However, this should allow you
-    to do minor upgrades and some naive version pinning idependently of ifs
-    source versions.
+    To inspect an install script before you run it, use `ifs export SOURCE`.
+
+    Versions
+
+    Sources come in three varieties: compiled packages, source packages,
+    and repositories. If a source uses a package (tarball, .deb) the install
+    script will be locked to a version. You can override it with --version
+
+      ifs install redis --version 2.8.13
+
+    In this case, if you want to upgrade to a new version you can generally
+    just specify the latest version when it comes out, e.g.
+
+      ifs install redis --version 2.8.15
+
+    In the third case packages are installed from an apt repo. By default, ifs
+    will install the latest version from the repo when you run install. If you
+    want to upgrade later, you can pass -f, e.g. `ifs install -f jenkins`. This
+    will force ifs to reinstall the latest (essentially upgrading).
+
+    Upstream Patches
+
+    We strive to provide installers for the latest and greatest versions.
+
+    Sometimes the installation dependencies will change and you'll need to
+    modify the installer to get the latest version to install. Please submit a
+    patch if you fix something! https://github.com/cbednarski/ifs
+
+    Future-proofing Installations
+
+    There are a slew of variables involved in installing packages, including
+    updates to dependencies, security fixes, and so forth.
+
+    If you want to guarantee that the version you install doesn't change over
+    time, you should probably use a tool like docker. However, you can achieve
+    some naive version-locking by using `ifs export SOURCE` for each app you
+    install, and checking these files into your version control. When you
+    install later, use `ifs source FILENAME` instead of `ifs install SOURCE`.
     """
     app = get_app(app_name)
     installed_version = app.check_version()
@@ -111,7 +154,7 @@ def source(source):
     bash source built-in for ifs.
 
     Note: The source file should be a python file with the same basic structure
-    as one of the built-in source files. Run ifs export template to create a
+    as one of the built-in source files. Run `ifs export template` to create a
     new one.
     """
     app = lib.App.load_external(source)
@@ -137,7 +180,7 @@ def export(source):
 
     This is useful to see details on how a built-in source is installed, or to
     facilitate creating a new source from a template. You can install exported
-    sources with `ifs source`
+    sources with `ifs source FILENAME`.
     """
     source_code = lib.export_source(source)
     if source_code:
@@ -155,7 +198,7 @@ def version(app_name):
 
       ifs version nginx
 
-    Abstracts away application-specific flags like -v -V --version -version etc.
+    Abstracts away application-specific flags like -v, -V, --version, etc.
     """
     app = get_app(app_name)
 
