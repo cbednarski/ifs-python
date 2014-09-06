@@ -90,7 +90,7 @@ def install(app_name, version, force):
         click.echo('%s %s is already installed' % (app.name, installed_version))
         exit(0)
 
-    cmd = app.install()
+    cmd = app.install(version)
     if cmd.returncode == 0:
         ok(cmd.output)
     else:
