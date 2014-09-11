@@ -126,7 +126,7 @@ def install(app_name, version, force):
 
     if not version:
         version = app.version
-    if installed_version == version and not force:
+    if version and installed_version == version and not force:
         click.echo('%s %s is already installed' % (app.name, installed_version))
         exit(0)
     if installed_version and not version and not force:
