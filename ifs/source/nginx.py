@@ -1,4 +1,4 @@
-version='1.6.1'
+version='1.6.2'
 version_cmd='nginx -v'
 depends=['build-essential', 'libpcre3-dev', 'zlib1g-dev', 'libssl-dev']
 download_url='http://nginx.org/download/nginx-VERSION.tar.gz'
