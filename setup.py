@@ -2,11 +2,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='ifs',
-    version='0.3.0',
-    author='Chris Bednarksi',
+    version='0.3.1',
+    author='Chris Bednarski',
     author_email='banzaimonkey@gmail.com',
     url='https://github.com/cbednarski/ifs',
     description='Install from source',
+    license='ISC',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
