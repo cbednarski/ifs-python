@@ -8,7 +8,7 @@ These scripts currently target Ubuntu 14.04.
 
 Install nginx
 
-    pip install --upgrade ifs
+    pip install -U ifs
     ifs install nginx
     ifs install redis
     ifs install riak
@@ -26,6 +26,6 @@ Run `ifs` to see all commands and `--help` on any command to see additional info
 
 ## Install for development
 
-    pip install --upgrade virtualenv
+    pip install -U virtualenv
     git clone https://github.com/cbednarski/ifs.git
     make test
