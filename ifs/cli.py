@@ -121,6 +121,12 @@ def install(app_name, version, force):
     install, and checking these files into your version control. When you
     install later, use `ifs source FILENAME` instead of `ifs install SOURCE`.
     """
+    if app_name == 'template':
+        click.echo("`template` isn't really an app. It's a dummy that helps "
+                   "you create a new ifs installer. Try:\n  ifs export "
+                   "template")
+        exit(1)
+
     app = get_app(app_name)
     installed_version = app.check_version()
 
@@ -226,6 +232,20 @@ def info(app_name):
         if type(v) is list:
             v = ' '.join(v)
         click.echo('%s: %s' % (k, v))
+
+
+@cli.command()
+def aptupdate():
+    """
+    Alias for housekeeping tasks, including apt-get update.
+    """
+    cmd = lib.Cmd.run("""
+        apt-get clean
+        apt-get update -qq
+        apt-get upgrade -yq
+        apt-get autoremove -y
+        """, autoprint=True)
+    exit(cmd.returncode)
 
 
 if __name__ == '__main__':
