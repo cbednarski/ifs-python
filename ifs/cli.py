@@ -25,7 +25,8 @@ def ok(message=None, file=None, nl=True):
 
 
 @click.group()
-def cli():
+@click.version_option()
+def cli(version):
     """
     Install From Source
 
