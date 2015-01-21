@@ -1,10 +1,13 @@
 import sys
+import datetime
 from textwrap import TextWrapper, dedent
+
 
 import click
 from colorama import Style, Fore
 B = Style.BRIGHT
 N = Style.NORMAL
+
 
 import lib
 
@@ -26,7 +29,7 @@ def ok(message=None, file=None, nl=True):
 
 @click.group()
 @click.version_option()
-def cli(version):
+def cli():
     """
     Install From Source
 
@@ -236,17 +239,24 @@ def info(app_name):
 
 
 @cli.command()
-def aptupdate():
+@click.option('--force', '-f', default=False, is_flag=True, help='Force update, even if the system was updated recently')
+def aptupdate(force):
     """
-    Alias for housekeeping tasks, including apt-get update.
+    Alias for apt-get upgrade and associated housekeeping (clean, autoremove, etc.).
     """
-    cmd = lib.Cmd.run("""
-        apt-get clean
-        apt-get update -qq
-        apt-get upgrade -yq
-        apt-get autoremove -y
-        """, autoprint=True)
-    exit(cmd.returncode)
+    if force or lib.out_of_date():
+        cmd = lib.Cmd.run("""
+            apt-get clean
+            apt-get update -qq
+            apt-get upgrade -yq
+            apt-get autoremove -y
+            """, autoprint=True)
+        lib.write_last_updated()
+        exit(cmd.returncode)
+    else:
+        t = datetime.datetime.fromtimestamp(lib.read_last_updated()).isoformat()
+        click.echo("System was updated at %s, skipping" % t)
+    exit(0)
 
 
 if __name__ == '__main__':

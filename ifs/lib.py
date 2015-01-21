@@ -5,9 +5,14 @@ import os
 import re
 import subprocess
 import sys
+import time
 import urllib
 
+
 import click
+
+
+last_updated_file = '/opt/ifs/last_update'
 
 
 def get_download_filename(url, target):
@@ -71,6 +76,32 @@ def export_source(source):
 
 def match_semver(string):
     return
+
+
+def read_last_updated():
+    if os.path.exists(last_updated_file):
+        with open(last_updated_file) as f:
+            try:
+                return int(float(f.read()))
+            except ValueError:
+                return 0
+    return 0
+
+
+def write_last_updated():
+    path = os.path.dirname(last_updated_file)
+    if not os.path.isdir(path):
+        os.makedirs(path, 0755)
+    with open(last_updated_file, 'w') as f:
+        f.write(str(time.time()))
+        f.close()
+
+
+def out_of_date(delay=86400):
+    t = time.time()
+    if t - read_last_updated() > delay:
+        return True
+    return False
 
 
 class Cmd(object):
