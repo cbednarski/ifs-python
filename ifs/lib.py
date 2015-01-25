@@ -12,7 +12,8 @@ import urllib
 import click
 
 
-last_updated_file = '/opt/ifs/last_update'
+# We want this to persist across reboots so do not use /tmp
+last_updated_file = '/var/lib/ifs/last_update'
 
 
 def get_download_filename(url, target):
