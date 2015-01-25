@@ -50,6 +50,7 @@ def list_app_names():
         i = os.path.basename(f).split('.')[0]
         if i not in ['__init__']:
             results.append(i)
+    results.sort()
     return results
 
 def list_apps():
