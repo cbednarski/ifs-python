@@ -1,4 +1,4 @@
-version='0.4.0'
+version='0.4.1'
 version_cmd='consul -v'
 depends=['unzip']
 download_url='https://dl.bintray.com/mitchellh/consul/VERSION_linux_amd64.zip'
