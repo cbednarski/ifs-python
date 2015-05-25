@@ -1,6 +1,6 @@
-version_cmd='mysqld --version'
-version_re='(\d+\.\d+\.\S+).+Percona Server'
-install_script="""
+version_cmd = 'mysqld --version'
+version_re = '(\d+\.\d+\.\S+).+Percona Server'
+install_script = """
 apt-key adv --keyserver keys.gnupg.net --recv-keys 1C4CBDCDCD2EFD2A
 echo "deb http://repo.percona.com/apt trusty main
 deb-src http://repo.percona.com/apt trusty main" > /etc/apt/sources.list.d/percona.list

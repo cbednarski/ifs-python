@@ -8,9 +8,7 @@ import sys
 import time
 import urllib
 
-
 import click
-
 
 # We want this to persist across reboots so do not use /tmp
 last_updated_file = '/var/lib/ifs/last_update'
@@ -29,6 +27,7 @@ def get_download_filename(url, target):
         return target
     return None
 
+
 def download(url, target):
     """
     Download URL to TARGET on your local filesystem. TARGET should be an
@@ -42,6 +41,7 @@ def download(url, target):
     urllib.urlretrieve(url, target)
     return target
 
+
 def list_app_names():
     path = os.path.dirname(os.path.realpath(__file__))
     files = glob.glob(path + '/source/*.py')
@@ -53,11 +53,13 @@ def list_app_names():
     results.sort()
     return results
 
+
 def list_apps():
     apps = []
     for app_name in list_app_names():
         apps.append(App.load(app_name))
     return apps
+
 
 def search_app_strings(term):
     results = set()
@@ -68,6 +70,7 @@ def search_app_strings(term):
             results.add(app)
     return results
 
+
 def export_source(source):
     path = os.path.dirname(os.path.realpath(__file__))
     source_file = path + '/source/%s.py' % source
@@ -75,6 +78,7 @@ def export_source(source):
         return open(source_file).read()
     else:
         return None
+
 
 def match_semver(string):
     return
@@ -116,7 +120,11 @@ class Cmd(object):
         self.cmd = cmd
 
     def execute(self, autoprint=False):
-        p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1, shell=True)
+        p = subprocess.Popen(self.cmd,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT,
+                             bufsize=1,
+                             shell=True)
         output = ''
         for line in iter(p.stdout.readline, b''):
             output += line
@@ -135,13 +143,13 @@ class Cmd(object):
 
 
 class App(object):
-    depends        = None
-    description    = None
-    download_url   = None
+    depends = None
+    description = None
+    download_url = None
     install_script = None
-    name           = None
-    version        = None
-    version_cmd    = None
+    name = None
+    version = None
+    version_cmd = None
 
     def __init__(self, name, module=None):
         self.name = name
@@ -154,7 +162,8 @@ class App(object):
     @classmethod
     def load(cls, app_name):
         try:
-            mod = importlib.import_module('ifs.source.%s' % app_name, '..source')
+            mod = importlib.import_module('ifs.source.%s' % app_name,
+                                          '..source')
             app = cls(app_name, mod)
         except ImportError as e:
             app = None
@@ -221,7 +230,7 @@ class App(object):
             version = self.version
 
         # Create temp directory
-        target='/tmp/ifs-%s-%s' % (self.name, self.version)
+        target = '/tmp/ifs-%s-%s' % (self.name, self.version)
         if not os.path.exists(target):
             os.mkdir(target)
         os.chdir(target)

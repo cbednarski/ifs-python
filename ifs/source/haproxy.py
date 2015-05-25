@@ -1,9 +1,9 @@
-version='1.5.5'
-version_cmd='haproxy -v'
-depends=['build-essential','libpcre3-dev','zlib1g-dev','libssl-dev']
-download_url='http://www.haproxy.org/download/1.5/src/haproxy-VERSION.tar.gz'
+version = '1.5.5'
+version_cmd = 'haproxy -v'
+depends = ['build-essential', 'libpcre3-dev', 'zlib1g-dev', 'libssl-dev']
+download_url = 'http://www.haproxy.org/download/1.5/src/haproxy-VERSION.tar.gz'
 
-upstart="""
+upstart = """
 start on runlevel [2345]
 stop on runlevel [016]
 
@@ -17,7 +17,7 @@ reload signal SIGHUP
 exec haproxy
 """
 
-install_script="""
+install_script = """
 echo "This installer is broken :("
 echo "Please help fix it: https://github.com/cbednarski/ifs/issues/9"
 # tar -xzf haproxy-VERSION.tar.gz

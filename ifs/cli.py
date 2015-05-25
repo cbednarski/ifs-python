@@ -2,12 +2,10 @@ import sys
 import datetime
 from textwrap import TextWrapper, dedent
 
-
 import click
 from colorama import Style, Fore
 B = Style.BRIGHT
 N = Style.NORMAL
-
 
 import lib
 
@@ -20,8 +18,11 @@ def get_app(app_name):
     else:
         return app
 
+
 def error(message=None, nl=True):
-    click.echo(Style.BRIGHT + Fore.RED + message + Style.RESET_ALL, sys.stderr, nl)
+    click.echo(Style.BRIGHT + Fore.RED + message + Style.RESET_ALL, sys.stderr,
+               nl)
+
 
 def ok(message=None, file=None, nl=True):
     click.echo(Style.BRIGHT + Fore.GREEN + message + Style.RESET_ALL, file, nl)
@@ -79,7 +80,10 @@ def grep(term):
 @cli.command()
 @click.argument('app_name')
 @click.option('--version', help='Override the default version')
-@click.option('--force', '-f', default=False, is_flag=True, help='Force redownload and reinstall')
+@click.option('--force', '-f',
+              default=False,
+              is_flag=True,
+              help='Force redownload and reinstall')
 def install(app_name, version, force):
     """
     Install the specified application.
@@ -137,10 +141,12 @@ def install(app_name, version, force):
     if not version:
         version = app.version
     if version and installed_version == version and not force:
-        click.echo('%s %s is already installed' % (app.name, installed_version))
+        click.echo('%s %s is already installed' %
+                   (app.name, installed_version))
         exit(0)
     if installed_version and not version and not force:
-        click.echo('%s %s is already installed' % (app.name, installed_version))
+        click.echo('%s %s is already installed' %
+                   (app.name, installed_version))
         exit(0)
 
     cmd = app.install(version)
@@ -239,7 +245,10 @@ def info(app_name):
 
 
 @cli.command()
-@click.option('--force', '-f', default=False, is_flag=True, help='Force update, even if the system was updated recently')
+@click.option('--force', '-f',
+              default=False,
+              is_flag=True,
+              help='Force update, even if the system was updated recently')
 def aptupdate(force):
     """
     Alias for apt-get upgrade and associated housekeeping (clean, autoremove, etc.).
@@ -250,11 +259,13 @@ def aptupdate(force):
             apt-get update -qq
             apt-get upgrade -yq
             apt-get autoremove -y
-            """, autoprint=True)
+            """,
+                          autoprint=True)
         lib.write_last_updated()
         exit(cmd.returncode)
     else:
-        t = datetime.datetime.fromtimestamp(lib.read_last_updated()).isoformat()
+        t = datetime.datetime.fromtimestamp(
+            lib.read_last_updated()).isoformat()
         click.echo("System was updated at %s, skipping" % t)
     exit(0)
 

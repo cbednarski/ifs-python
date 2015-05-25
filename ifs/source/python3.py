@@ -1,8 +1,8 @@
-version='3.4.3'
-version_cmd='python -v'
-depends=['build-essential']
-download_url='https://www.python.org/ftp/python/VERSION/Python-VERSION.tgz'
-install_script="""
+version = '3.4.3'
+version_cmd = 'python -v'
+depends = ['build-essential']
+download_url = 'https://www.python.org/ftp/python/VERSION/Python-VERSION.tgz'
+install_script = """
 tar -xzf Python-VERSION.tgz
 cd Python-VERSION/
 ./configure
