@@ -17,7 +17,7 @@ def test_load_app():
 
 def test_get_download_url():
     url = lib.App.load('nginx').get_download_url()
-    assert url == 'http://nginx.org/download/nginx-1.6.1.tar.gz'
+    assert url == 'http://nginx.org/download/nginx-1.8.0.tar.gz'
 
     url = lib.App.load('nginx').get_download_url('1.6.3')
     assert url == 'http://nginx.org/download/nginx-1.6.3.tar.gz'
