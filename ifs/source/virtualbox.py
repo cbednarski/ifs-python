@@ -1,7 +1,8 @@
-version = '4.3.20'
+version = '5.0.0'
 version_cmd = 'VBoxManage -v'
-download_url = 'http://download.virtualbox.org/virtualbox/4.3.20/virtualbox-4.3_4.3.20-96996~Ubuntu~raring_amd64.deb'
+depends=['dkms']
+download_url = 'http://download.virtualbox.org/virtualbox/5.0.0/virtualbox-5.0_5.0.0-101573~Ubuntu~trusty_amd64.deb'
 install_script = """
-dpkg -i virtualbox-4.3_4.3.20-96996~Ubuntu~raring_amd64.deb || true
+dpkg -i http://download.virtualbox.org/virtualbox/5.0.0/virtualbox-5.0_5.0.0-101573~Ubuntu~trusty_amd64.deb
 apt-get install -fy
 """

@@ -1,4 +1,4 @@
-version = '0.10.31'
+version = '0.12.7'
 version_cmd = 'node -v'
 download_url = 'http://nodejs.org/dist/vVERSION/node-vVERSION-linux-x64.tar.gz'
 install_script = """
