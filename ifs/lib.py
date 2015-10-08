@@ -230,7 +230,7 @@ class App(object):
             version = self.version
 
         # Create temp directory
-        target = '/tmp/ifs-%s-%s' % (self.name, self.version)
+        target = '/tmp/ifs-%s-%s' % (self.name, version)
         if not os.path.exists(target):
             os.mkdir(target)
         os.chdir(target)
