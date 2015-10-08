@@ -1,4 +1,4 @@
-version = '1.7.0'
+version = '1.8.2'
 version_cmd = 'docker -v'
 depends = ['apt-transport-https']
 install_script = """

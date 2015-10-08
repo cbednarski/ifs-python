@@ -1,4 +1,4 @@
-version = '1.4.2'
+version = '1.5.1'
 version_cmd = 'go version'
 download_url = 'https://storage.googleapis.com/golang/goVERSION.linux-amd64.tar.gz'
 install_script = """
