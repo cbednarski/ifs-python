@@ -1,4 +1,4 @@
-version = '5.0.0'
+version = '5.0.16'
 version_cmd = 'VBoxManage -v'
 depends=['dkms', 'libgl1-mesa-glx', 'libqt4-network', 'libqt4-opengl', 'libqtcore4', 'libqtgui4', 'libsdl1.2debian', 'libvpx1', 'libxcursor1', 'libxinerama1']
 download_url = 'http://download.virtualbox.org/virtualbox/5.0.0/virtualbox-5.0_5.0.0-101573~Ubuntu~trusty_amd64.deb'

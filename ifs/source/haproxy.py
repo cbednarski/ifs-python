@@ -1,7 +1,7 @@
-version = '1.5.14'
+version = '1.6.4'
 version_cmd = 'haproxy -v'
 depends = ['build-essential', 'libpcre3-dev', 'zlib1g-dev', 'libssl-dev']
-download_url = 'http://www.haproxy.org/download/1.5/src/haproxy-VERSION.tar.gz'
+download_url = 'http://www.haproxy.org/download/1.6/src/haproxy-VERSION.tar.gz'
 
 upstart = """
 start on runlevel [2345]

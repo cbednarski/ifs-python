@@ -1,4 +1,4 @@
-version = '3.0.4'
+version = '3.0.7'
 version_cmd = 'redis-server -v'
 depends = ['build-essential']
 download_url = 'http://download.redis.io/releases/redis-VERSION.tar.gz'

@@ -1,4 +1,4 @@
-version = '3.5.0'
+version = '3.5.1'
 version_cmd = 'python -v'
 depends = ['build-essential']
 download_url = 'https://www.python.org/ftp/python/VERSION/Python-VERSION.tgz'
