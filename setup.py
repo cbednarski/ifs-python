@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ifs',
-    version='0.7.1',
+    version='0.8.0',
     author='Chris Bednarski',
     author_email='banzaimonkey@gmail.com',
     url='https://github.com/cbednarski/ifs',
