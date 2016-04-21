@@ -1,4 +1,4 @@
-version = '2.3.0'
+version = '2.3.1'
 version_cmd = 'elasticsearch -version'
 download_url = 'http://packages.elasticsearch.org/GPG-KEY-elasticsearch'
 install_script = """

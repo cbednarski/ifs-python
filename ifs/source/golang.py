@@ -1,4 +1,4 @@
-version = '1.6'
+version = '1.6.2'
 version_cmd = 'go version'
 version_re = 'go version go([\d\.]+)'
 download_url = 'https://storage.googleapis.com/golang/goVERSION.linux-amd64.tar.gz'

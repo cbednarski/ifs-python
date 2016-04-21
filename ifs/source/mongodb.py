@@ -1,5 +1,5 @@
 name = 'mongodb'
-version = '3.0.5'
+version = '3.2.5'
 version_cmd = 'mongod --version'
 install_script = '''
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10

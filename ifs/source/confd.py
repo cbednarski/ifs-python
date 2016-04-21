@@ -1,4 +1,4 @@
-version = '0.10.0'
+version = '0.11.0'
 version_cmd = 'confd -version'
 download_url = 'https://github.com/kelseyhightower/confd/releases/download/vVERSION/confd-VERSION-linux-amd64'
 install_script = """

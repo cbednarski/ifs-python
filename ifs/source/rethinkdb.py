@@ -1,4 +1,4 @@
-version = '2.2.6'
+version = '2.3.0'
 version_cmd = 'rethinkdb -v'
 depends = ['apt-transport-https']
 install_script = """

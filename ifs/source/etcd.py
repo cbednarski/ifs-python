@@ -1,4 +1,4 @@
-version = '2.3.0'
+version = '2.3.2'
 version_cmd = 'etcd -version'
 download_url = 'https://github.com/coreos/etcd/releases/download/vVERSION/etcd-vVERSION-linux-amd64.tar.gz'
 install_script = """
