@@ -22,7 +22,8 @@ Run `ifs` to see all commands and `--help` on any command to see additional info
 (It's so meta)
 
     git clone https://github.com/cbednarski/ifs.git
-    pip install -e ifs
+    cd ifs
+    pip install -e .
 
 ## Install for development
 
