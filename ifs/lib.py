@@ -4,11 +4,16 @@ import importlib
 import os
 import re
 import subprocess
-import sys
 import time
-import urllib
+import sys
+if sys.version_info[0] == 2:
+    from urllib import urlretrieve
+else:
+    from urllib.request import urlretrieve
+
 
 import click
+
 
 # We want this to persist across reboots so do not use /tmp
 last_updated_file = '/var/lib/ifs/last_update'
@@ -38,7 +43,7 @@ def download(url, target):
     # http://stackoverflow.com/a/22776/317916
     if not url:
         return None
-    urllib.urlretrieve(url, target)
+    urlretrieve(url, target)
     return target
 
 
@@ -97,7 +102,7 @@ def read_last_updated():
 def write_last_updated():
     path = os.path.dirname(last_updated_file)
     if not os.path.isdir(path):
-        os.makedirs(path, 0755)
+        os.makedirs(path, 0o755)
     with open(last_updated_file, 'w') as f:
         f.write(str(time.time()))
         f.close()
@@ -127,9 +132,10 @@ class Cmd(object):
                              shell=True)
         output = ''
         for line in iter(p.stdout.readline, b''):
-            output += line
+            sline = line.decode(sys.stdout.encoding)
+            output += sline
             if autoprint:
-                print line,
+                print(sline, end='')
         p.communicate()
         self.output = output
         self.returncode = p.returncode
@@ -154,7 +160,7 @@ class App(object):
     def __init__(self, name, module=None):
         self.name = name
         if module:
-            for k, v in module.__dict__.iteritems():
+            for k, v in module.__dict__.items():
                 if k[0] != '_':
                     setattr(self, k, v)
         # self.__dict__.update(module.__dict__)
@@ -165,7 +171,7 @@ class App(object):
             mod = importlib.import_module('ifs.source.%s' % app_name,
                                           '..source')
             app = cls(app_name, mod)
-        except ImportError as e:
+        except ImportError:
             app = None
         return app
 
@@ -177,7 +183,7 @@ class App(object):
             module = imp.load_source(name, path)
             app = cls(name, module)
             return app
-        except Exception as e:
+        except Exception:
             return None
 
     def get_download_url(self, version=None):
@@ -225,7 +231,7 @@ class App(object):
             cmd = cmd.replace('VERSION', version)
         return cmd
 
-    def install(self, version=None, force=False):
+    def install(self, version=None):
         if not version:
             version = self.version
 

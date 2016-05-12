@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name='ifs',
@@ -8,7 +8,7 @@ setup(
     url='https://github.com/cbednarski/ifs',
     description='Install from source',
     license='ISC',
-    packages=find_packages(),
+    packages=['ifs', 'ifs.source'],
     include_package_data=True,
     install_requires=[
         'Click',

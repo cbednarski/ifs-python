@@ -1,4 +1,5 @@
 .vagrant
+.idea
 venv
 *.pyc
 ifs.egg-info/

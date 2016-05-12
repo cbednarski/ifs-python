@@ -7,7 +7,7 @@ from colorama import Style, Fore
 B = Style.BRIGHT
 N = Style.NORMAL
 
-import lib
+from ifs import lib
 
 
 def get_app(app_name):
