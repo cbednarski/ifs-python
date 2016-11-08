@@ -151,7 +151,7 @@ def install(app_name, version, force):
 
     cmd = app.install(version)
     if cmd.returncode == 0:
-        ok("Successfully installed %s version %s" % (app.name, app.version))
+        ok("Successfully installed %s version %s" % (app.name, version))
     else:
         error("Error installing %s" % app.name)
     exit(cmd.returncode)
