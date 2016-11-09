@@ -1,4 +1,4 @@
-version = '0.6.15'
+version = '0.7.9'
 version_cmd = 'terraform version'
 version_re = 'Terraform v(\d+\.\d+\.\d+).*'
 depends = ['unzip']

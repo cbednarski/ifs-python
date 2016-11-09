@@ -1,4 +1,4 @@
-version = '0.6.4'
+version = '0.7.0'
 version_cmd = 'consul -v'
 depends = ['unzip']
 download_url = 'https://releases.hashicorp.com/consul/VERSION/consul_VERSION_linux_amd64.zip'

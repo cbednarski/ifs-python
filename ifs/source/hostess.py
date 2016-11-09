@@ -1,4 +1,4 @@
-version = '0.1.0'
+version = '0.2.1'
 version_cmd = 'hostess -v'
 version_re = 'hostess version (\d+\.\d+\.\d+)'
 download_url = 'https://github.com/cbednarski/hostess/releases/download/vVERSION/hostess_linux_amd64'

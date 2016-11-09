@@ -1,4 +1,4 @@
-version = '1.6.4'
+version = '1.6.9'
 version_cmd = 'haproxy -v'
 depends = ['build-essential', 'libpcre3-dev', 'zlib1g-dev', 'libssl-dev']
 download_url = 'http://www.haproxy.org/download/1.6/src/haproxy-VERSION.tar.gz'

@@ -1,4 +1,4 @@
-version = '0.10.0'
+version = '0.11.0'
 version_cmd = 'packer version'
 version_re = 'Packer v(\d+\.\d+\.\d+).*'
 depends = ['unzip']

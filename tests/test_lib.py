@@ -3,7 +3,11 @@ from ifs import lib
 
 def test_list_apps():
     apps = lib.list_apps()
-    assert 'nginx' in apps
+    found = False
+    for app in apps:
+        if app.name == "nginx":
+            found = True
+    assert found
     assert '__init__' not in apps
 
 
@@ -17,7 +21,7 @@ def test_load_app():
 
 def test_get_download_url():
     url = lib.App.load('nginx').get_download_url()
-    assert url == 'http://nginx.org/download/nginx-1.8.0.tar.gz'
+    assert url == 'http://nginx.org/download/nginx-1.10.2.tar.gz'
 
     url = lib.App.load('nginx').get_download_url('1.6.3')
     assert url == 'http://nginx.org/download/nginx-1.6.3.tar.gz'
